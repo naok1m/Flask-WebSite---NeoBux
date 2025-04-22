@@ -12,10 +12,10 @@ Este é um projeto de uma loja virtual de **Robux**, a moeda do jogo Roblox, des
 
 ## 📸 Preview do Projeto
 
-> *![alt text](image.png)*
+> *![alt text](/assets/Tela1.png)*
 
 
->![alt text](image-1.png)
+>*![alt text](/assets/Tela2.png)*
 
 ## ⚙️ Funcionalidades
 
