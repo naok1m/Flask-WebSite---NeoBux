@@ -76,12 +76,12 @@
   <!-- Modal de Compra -->
   <div id="modal-compra" class="modal-overlay">
     <div class="modal-content">
-      <button onclick="fecharModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
+      <button onclick="fecharModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.8);">×</button>
       
       <!-- Etapa 1: Formulário -->
       <div id="etapa-formulario">
         <h3>Finalizar Pedido</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Preencha seus dados para continuar com a compra</p>
+        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">Preencha seus dados para continuar com a compra</p>
         
         <form id="form-pedido" method="POST" action="{{ url_for('homepage') }}">
           {{ form.hidden_tag() }}
@@ -118,7 +118,7 @@
       <!-- Etapa 2: Pagamento -->
       <div id="etapa-pagamento" style="display: none;">
         <h3>Pagamento via PIX</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Escaneie o QR Code ou copie a chave PIX para realizar o pagamento</p>
+        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">Escaneie o QR Code ou copie a chave PIX para realizar o pagamento</p>
         
         <div style="text-align: center; margin: 1.5rem 0;">
           <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); display: inline-block; box-shadow: var(--shadow-md);">
@@ -126,9 +126,9 @@
           </div>
         </div>
         
-        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); margin: 1rem 0;">
-          <p style="font-weight: 600; margin-bottom: 0.5rem;">Chave PIX:</p>
-          <p style="font-family: monospace; background: white; padding: 0.5rem; border-radius: var(--radius-sm); word-break: break-all;">pix@neobux.com.br</p>
+        <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: var(--radius-md); margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.2);">
+          <p style="font-weight: 600; margin-bottom: 0.5rem; color: var(--bg-primary);">Chave PIX:</p>
+          <p style="font-family: monospace; background: rgba(255, 255, 255, 0.2); padding: 0.5rem; border-radius: var(--radius-sm); word-break: break-all; color: var(--bg-primary);">pix@neobux.com.br</p>
         </div>
         
         <div class="btn-group">
