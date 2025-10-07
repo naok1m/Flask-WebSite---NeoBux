@@ -1,106 +1,141 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loja de Robux</title>
+  <title>NeoBux - Loja de Robux Premium</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<header>
-  <div class="banner-container">
-    <h1 class="site-name">NeoBux</h1>
-    <nav>
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#sobre">Sobre</a></li>
-        <li><a href="#contatos">Contatos</a></li>
-        <li><a href="#produtos">Produtos</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
 <body>
-  <div class="container">
-    <h1 style="text-align: center;">Bem-vindo à nossa loja de Robux!</h1>
-    <p style="text-align: center;">Aqui você encontra os melhores preços para gamepasses do Roblox. Escolha o pacote ideal e receba rapidamente!</p>
+  <header>
+    <div class="banner-container">
+      <h1 class="site-name">NeoBux</h1>
+      <nav>
+        <ul>
+          <li><a href="#home">Início</a></li>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="{{ url_for('pedidos') }}">Pedidos</a></li>
+          <li><a href="{{ url_for('admin_pedidos') }}">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Robux Premium com Entrega Rápida</h1>
+      <p>Os melhores preços do mercado para gamepasses do Roblox. Compra segura, entrega em até 10 minutos!</p>
+    </div>
+
+    <div class="container">
     
-    <h2>Produtos</h2>
-    <div class="produtos">
-      {% for produto in produtos %}
-      <div class="produto" onclick="abrirModal('{{ produto.id }}')">
-        <h3>{{ produto.nome }}</h3>
-        <p>{{ produto.quantidade }}</p>
-        <p><strong>R$ {{ "%.2f"|format(produto.preco) }}</strong></p>
+      <section id="produtos">
+        <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: white;">Nossos Pacotes</h2>
+        <div class="produtos">
+          {% for produto in produtos %}
+          <div class="produto" onclick="abrirModal('{{ produto.id }}')">
+            <h3>{{ produto.nome }}</h3>
+            <div class="quantidade">{{ produto.quantidade }} Robux</div>
+            <div class="preco">R$ {{ "%.2f"|format(produto.preco) }}</div>
+            <button class="btn-comprar">Comprar Agora</button>
+          </div>
+          {% else %}
+            <div style="text-align: center; color: white; font-size: 1.2rem;">
+              <p>Nenhum produto disponível no momento.</p>
+            </div>
+          {% endfor %}
         </div>
-      {% else %}
-        <p>Nenhum produto disponível no momento.</p>
-      {% endfor %}
-    </div>
+      </section>
 
-    <div style="margin-top: 4rem;">
-      <h2>Perguntas Frequentes (FAQ)</h2>
-      <details>
-        <summary>Como recebo meu produto?</summary>
-        <p>Você receberá sua gamepass no Roblox após a confirmação do pagamento.</p>
-      </details>
-      <details>
-        <summary>Quanto tempo demora?</summary>
-        <p>Em média 5 a 10 minutos após o pagamento.</p>
-      </details>
+      <div class="faq">
+        <h2>Perguntas Frequentes</h2>
+        <details>
+          <summary>Como recebo meu produto?</summary>
+          <p>Você receberá sua gamepass no Roblox automaticamente após a confirmação do pagamento via PIX.</p>
+        </details>
+        <details>
+          <summary>Quanto tempo demora a entrega?</summary>
+          <p>Em média 5 a 10 minutos após a confirmação do pagamento. Em casos raros, pode levar até 30 minutos.</p>
+        </details>
+        <details>
+          <summary>Quais formas de pagamento aceitas?</summary>
+          <p>Aceitamos apenas PIX para garantir maior segurança e rapidez na transação.</p>
+        </details>
+        <details>
+          <summary>É seguro comprar aqui?</summary>
+          <p>Sim! Utilizamos criptografia SSL e processamento seguro. Seus dados estão protegidos.</p>
+        </details>
+        <details>
+          <summary>E se eu não receber meu produto?</summary>
+          <p>Entre em contato conosco imediatamente. Garantimos 100% de reembolso ou entrega do produto.</p>
+        </details>
+      </div>
     </div>
-  </div>
+  </main>
 
-  <!-- Modal -->
-  <!-- Depois: -->
-<div id="modal-compra" class="modal-overlay">
-  <div class="modal-content">
-    
+  <!-- Modal de Compra -->
+  <div id="modal-compra" class="modal-overlay">
+    <div class="modal-content">
+      <button onclick="fecharModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">×</button>
       
       <!-- Etapa 1: Formulário -->
       <div id="etapa-formulario">
-        
         <h3>Finalizar Pedido</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Preencha seus dados para continuar com a compra</p>
+        
         <form id="form-pedido" method="POST" action="{{ url_for('homepage') }}">
           {{ form.hidden_tag() }}
+          
           <div class="campo-formulario">
             {{ form.username.label }}
-            {{ form.username() }}
+            {{ form.username(placeholder="Digite seu username do Roblox") }}
           </div>
         
           <div class="campo-formulario">
             {{ form.nome.label }}
-            {{ form.nome() }}
+            {{ form.nome(placeholder="Digite seu nome completo") }}
           </div>
         
           <div class="campo-formulario">
             {{ form.email.label }}
-            {{ form.email() }}
+            {{ form.email(placeholder="Digite seu e-mail") }}
           </div>
         
           <div class="campo-formulario">
             {{ form.linkgamepass.label }}
-            {{ form.linkgamepass() }}
+            {{ form.linkgamepass(placeholder="Cole aqui o link da gamepass") }}
           </div>
         
           <input type="hidden" name="produto" id="produto-id-escondido">
-          <br>
-          <button type="button" onclick="avancarParaPagamento()">Continuar</button>
-
+          
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="avancarParaPagamento()">Continuar</button>
+          </div>
         </form>
       </div>
   
       <!-- Etapa 2: Pagamento -->
       <div id="etapa-pagamento" style="display: none;">
-        <h3>Pagamento via Pix</h3>
-        <p>Escaneie o QR Code abaixo para realizar o pagamento.</p>
-        <img src="{{ url_for('static', filename='qrcode_exemplo.png') }}" alt="QR Code Pix" style="width: 100%;">
-        <br><br>
-        {{ form.submit() }}
-        <button type="button" onclick="voltarParaFormulario()">Voltar</button>
+        <h3>Pagamento via PIX</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Escaneie o QR Code ou copie a chave PIX para realizar o pagamento</p>
+        
+        <div style="text-align: center; margin: 1.5rem 0;">
+          <div style="background: white; padding: 1rem; border-radius: var(--radius-lg); display: inline-block; box-shadow: var(--shadow-md);">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBpeCBRUiBDb2RlPC90ZXh0Pjwvc3ZnPg==" alt="QR Code PIX" style="width: 200px; height: 200px;">
+          </div>
+        </div>
+        
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); margin: 1rem 0;">
+          <p style="font-weight: 600; margin-bottom: 0.5rem;">Chave PIX:</p>
+          <p style="font-family: monospace; background: white; padding: 0.5rem; border-radius: var(--radius-sm); word-break: break-all;">pix@neobux.com.br</p>
+        </div>
+        
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" onclick="voltarParaFormulario()">Voltar</button>
+          {{ form.submit(class="btn btn-success") }}
+        </div>
       </div>
-  
-      <br>
-      <button onclick="fecharModal()">Cancelar</button>
     </div>
   </div>
   
@@ -109,52 +144,142 @@
 </div>
 </div>
 
-<script>
-  // Função para abrir o modal e preencher o campo escondido com o ID do produto
-  function abrirModal(produtoId) {
-
-    const modal = document.getElementById('modal-compra');
-    const content = modal.querySelector('.modal-content');
-
-  // Resetar animações
-  modal.style.display = 'flex';
-  content.style.animation = 'none';
-  void content.offsetWidth; // Força o reflow
-  content.style.animation = 'slideIn 0.5s ease-out forwards';
-
-    
-    document.getElementById('produto-id-escondido').value = produtoId;
-    document.getElementById('etapa-formulario').style.display = 'block';
-    document.getElementById('etapa-pagamento').style.display = 'none';
-  }
-
-  function avancarParaPagamento() {
-    // Se quiser validar campos antes de prosseguir, pode colocar aqui
-
-    document.getElementById('etapa-formulario').style.display = 'none';
-    document.getElementById('etapa-pagamento').style.display = 'block';
-  }
-
-  function voltarParaFormulario() {
-    document.getElementById('etapa-pagamento').style.display = 'none';
-    document.getElementById('etapa-formulario').style.display = 'block';
-  }
-  // Função para fechar o modal
-  function fecharModal() {
-    document.getElementById('modal-compra').style.display = 'none';
-  }
-</script>
-
-
   <script>
+    // Função para abrir o modal
     function abrirModal(produtoId) {
-      document.getElementById('modal-compra').style.display = 'flex';
+      const modal = document.getElementById('modal-compra');
+      const content = modal.querySelector('.modal-content');
+
+      // Resetar animações
+      modal.style.display = 'flex';
+      content.style.animation = 'none';
+      void content.offsetWidth; // Força o reflow
+      content.style.animation = 'slideIn 0.3s ease-out forwards';
+
+      // Preencher o campo escondido com o ID do produto
       document.getElementById('produto-id-escondido').value = produtoId;
+      document.getElementById('etapa-formulario').style.display = 'block';
+      document.getElementById('etapa-pagamento').style.display = 'none';
+      
+      // Focar no primeiro campo
+      setTimeout(() => {
+        const firstInput = document.querySelector('#etapa-formulario input:not([type="hidden"])');
+        if (firstInput) firstInput.focus();
+      }, 300);
     }
 
+    // Função para fechar o modal
     function fecharModal() {
-      document.getElementById('modal-compra').style.display = 'none';
+      const modal = document.getElementById('modal-compra');
+      modal.style.display = 'none';
+      
+      // Limpar formulário
+      document.getElementById('form-pedido').reset();
     }
+
+    // Função para avançar para pagamento
+    function avancarParaPagamento() {
+      // Validar campos obrigatórios
+      const form = document.getElementById('form-pedido');
+      const requiredFields = form.querySelectorAll('input[required], input:not([type="hidden"])');
+      let isValid = true;
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.style.borderColor = 'var(--danger-color)';
+          isValid = false;
+        } else {
+          field.style.borderColor = 'var(--border-color)';
+        }
+      });
+
+      if (!isValid) {
+        showNotification('Por favor, preencha todos os campos obrigatórios', 'error');
+        return;
+      }
+
+      // Validar email
+      const email = document.querySelector('input[type="email"]').value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showNotification('Por favor, insira um e-mail válido', 'error');
+        return;
+      }
+
+      // Avançar para pagamento
+      document.getElementById('etapa-formulario').style.display = 'none';
+      document.getElementById('etapa-pagamento').style.display = 'block';
+    }
+
+    // Função para voltar ao formulário
+    function voltarParaFormulario() {
+      document.getElementById('etapa-pagamento').style.display = 'none';
+      document.getElementById('etapa-formulario').style.display = 'block';
+    }
+
+    // Função para mostrar notificações
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+    }
+
+    // Fechar modal ao clicar fora dele
+    document.getElementById('modal-compra').addEventListener('click', function(e) {
+      if (e.target === this) {
+        fecharModal();
+      }
+    });
+
+    // Fechar modal com ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        fecharModal();
+      }
+    });
+
+    // Animar elementos quando entram na tela
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observar produtos
+    document.querySelectorAll('.produto').forEach(produto => {
+      produto.style.opacity = '0';
+      produto.style.transform = 'translateY(20px)';
+      produto.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(produto);
+    });
+
+    // Smooth scroll para links de navegação
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Pedido #{{ pedido.id }} | NeoBux</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="banner-container">
+            <h1 class="site-name">NeoBux</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                    <li><a href="{{ url_for('pedidos') }}">Pedidos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="hero">
+                <h1>Status do Pedido</h1>
+                <p>Acompanhe o progresso do seu pedido</p>
+            </div>
+
+            <div style="background: var(--bg-primary); border-radius: var(--radius-xl); padding: 2rem; margin: 2rem 0; box-shadow: var(--shadow-lg);">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">Pedido #{{ pedido.id }}</h2>
+                    <span class="status status-{{ pedido.status }}" style="font-size: 1.1rem; padding: 0.5rem 1rem;">
+                        {{ pedido.status.title() }}
+                    </span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- Informações do Produto -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg);">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Produto</h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <p><strong>Nome:</strong> {{ pedido.produto.nome }}</p>
+                            <p><strong>Quantidade:</strong> {{ pedido.produto.quantidade }} Robux</p>
+                            <p><strong>Preço:</strong> <span style="color: var(--text-primary); font-weight: 600;">R$ {{ "%.2f"|format(pedido.produto.preco) }}</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Informações do Cliente -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg);">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Cliente</h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <p><strong>Nome:</strong> {{ pedido.nome_comprador }}</p>
+                            <p><strong>Username Roblox:</strong> {{ pedido.nick_roblox }}</p>
+                            <p><strong>Email:</strong> {{ pedido.email_comprador }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do Pedido -->
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg); margin-top: 1.5rem;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Detalhes do Pedido</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div>
+                            <p><strong>Data do Pedido:</strong></p>
+                            <p>{{ pedido.data_pedido.strftime('%d/%m/%Y às %H:%M') }}</p>
+                        </div>
+                        <div>
+                            <p><strong>Link da Gamepass:</strong></p>
+                            <a href="{{ pedido.gamepass_link }}" target="_blank" style="color: var(--primary-color); word-break: break-all;">{{ pedido.gamepass_link }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline do Status -->
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-lg); margin-top: 1.5rem;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Progresso do Pedido</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+                        <div class="status-step {% if pedido.status in ['pendente', 'verificado', 'pago', 'entregue'] %}active{% endif %}">
+                            <div class="step-icon">1</div>
+                            <span>Pedido Realizado</span>
+                        </div>
+                        <div class="status-step {% if pedido.status in ['verificado', 'pago', 'entregue'] %}active{% endif %}">
+                            <div class="step-icon">2</div>
+                            <span>Verificado</span>
+                        </div>
+                        <div class="status-step {% if pedido.status in ['pago', 'entregue'] %}active{% endif %}">
+                            <div class="step-icon">3</div>
+                            <span>Pago</span>
+                        </div>
+                        <div class="status-step {% if pedido.status == 'entregue' %}active{% endif %}">
+                            <div class="step-icon">4</div>
+                            <span>Entregue</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 2rem 0;">
+                <a href="{{ url_for('homepage') }}" class="btn btn-primary">Voltar à Loja</a>
+                <a href="{{ url_for('pedidos') }}" class="btn btn-secondary">Ver Outros Pedidos</a>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .status-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .status-step.active {
+            border-color: var(--primary-color);
+            background: var(--bg-secondary);
+        }
+
+        .step-icon {
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .status-step.active .step-icon {
+            background: var(--primary-color);
+            color: var(--bg-primary);
+            border-color: var(--primary-color);
+        }
+
+        .status-step span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+</body>
+</html>

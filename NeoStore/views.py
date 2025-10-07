@@ -42,7 +42,7 @@ def homepage():
                 database.session.commit()
 
                 print(f"Pedido criado com sucesso: {novo_pedido.id}")
-                return redirect(url_for('homepage'))
+                return redirect(url_for('ver_pedido', pedido_id=novo_pedido.id))
             else:
                 print("Produto não encontrado.")
         else:
@@ -59,33 +59,34 @@ def ver_pedido(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
     return render_template('status_pedido.html', pedido=pedido)
 
-    if form.validate_on_submit():
-        novo_pedido = Pedido(
-        # preenche os dados aqui
-        status='pendente',
-        data_criacao=datetime.now()
-    )
-    db.session.add(novo_pedido)
-    db.session.commit()
-    return redirect(url_for('ver_pedido', pedido_id=novo_pedido.id))
+@app.route('/admin/pedidos')
+def admin_pedidos():
+    """Página administrativa para visualizar pedidos"""
+    lista_pedidos = Pedido.query.order_by(Pedido.data_pedido.desc()).all()
+    return render_template('admin_pedidos.html', pedidos=lista_pedidos)
 
-# @app.route('/pedidos')
-# def pedidos():
-#     lista_pedidos = Pedido.query.order_by(Pedido.data_pedido.desc()).all()
-#     return render_template('pedidos.html', pedidos=lista_pedidos)
+@app.route('/admin/atualizar-status/<int:pedido_id>', methods=['POST'])
+def atualizar_status_pedido(pedido_id):
+    """Atualiza o status de um pedido"""
+    pedido = Pedido.query.get_or_404(pedido_id)
+    novo_status = request.form.get('status')
+    
+    if novo_status in ['pendente', 'verificado', 'pago', 'entregue', 'cancelado']:
+        pedido.status = novo_status
+        database.session.commit()
+        print(f"Status do pedido {pedido_id} atualizado para: {novo_status}")
+    
+    return redirect(url_for('admin_pedidos'))
 
-# @app.route('/confirmar_pagamento/<int:pedido_id>', methods=['POST'])
-# def confirmar_pagamento(pedido_id):
-#     pedido = Pedido.query.get_or_404(pedido_id)
-#     pedido.status = 'pago'
-#     db.session.commit()
-#     return redirect(url_for('pedidos'))
+@app.route('/pedidos')
+def pedidos():
+    """Página pública para visualizar pedidos (apenas status)"""
+    lista_pedidos = Pedido.query.order_by(Pedido.data_pedido.desc()).limit(10).all()
+    return render_template('pedidos.html', pedidos=lista_pedidos)
 
 
 
-from flask import render_template, request
-import requests
-from NeoStore import app
+# Rotas adicionais podem ser adicionadas aqui
 
 
 
