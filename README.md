@@ -136,10 +136,8 @@ python instalar.py
 ## 🚧 Funcionalidades Futuras
 
 - Sistema de autenticação de usuários
-- Painel administrativo
-- Sistema de pagamento
+- Painel administrativo completo
 - Notificações por email
-- API REST
 
 ## 🐛 Solução de Problemas
 
